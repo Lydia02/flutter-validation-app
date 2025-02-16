@@ -31,11 +31,12 @@ class _FormInputState extends State<FormInput> {
   }
 
   /// Phone validation function:
-  /// - Ensures input is a valid phone number with 10 to 15 digits.
+  /// - Ensures input starts with '+' followed by 10-15 digits.
+  /// - Allows different country codes (e.g., +1, +44, +234).
   String? validatePhone(String? phone) {
-    final RegExp phoneRegex = RegExp(r'^\d{10,15}$');
+    final RegExp phoneRegex = RegExp(r'^\+?[0-9]{10,15}$');
     if (phone == null || phone.isEmpty || !phoneRegex.hasMatch(phone)) {
-      return 'Enter a valid phone number (10-15 digits)';
+      return 'Enter a valid phone number with country code (e.g., +2348123456789)';
     }
     return null;
   }
@@ -110,7 +111,9 @@ class _FormInputState extends State<FormInput> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                   ),
-                  child: const Text("OK", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  child: const Text("OK",
+                      style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -163,7 +166,7 @@ class _FormInputState extends State<FormInput> {
                 // Phone Input Field
                 buildInputField(
                   "Phone",
-                  "Enter your phone number",
+                  "Enter your phone number (e.g., +2348123456789)",
                   _phoneController,
                   Icons.phone,
                   validatePhone,
@@ -222,6 +225,9 @@ class _FormInputState extends State<FormInput> {
         prefixIcon: Icon(icon, color: Colors.teal), // Icon inside the field
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), // Rounded border
       ),
+      keyboardType: label == "Phone"
+          ? TextInputType.phone // Allow numbers and `+`
+          : TextInputType.text, // Default type
       validator: validator, // Attach validation function
     );
   }
